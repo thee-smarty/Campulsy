@@ -20,13 +20,13 @@
             android:layout_height="wrap_content"
             android:text="Campulsy"
             android:textSize="50sp"
-            android:textColor="@color/black"
-            android:textStyle="bold"/>
+            android:textColor="#ff0000" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Your Campus Pulse."
-            android:textColor="@color/black"/>
+            android:textStyle="italic"
+            android:textColor="@color/black" />
 
 <!--        <ImageView-->
 <!--            android:id="@+id/logo"-->
@@ -43,9 +43,10 @@
         android:id="@+id/dev"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="#686868"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_margin="20dp"
-        android:text="Developed by thee_smarty" />
+        android:layout_margin="18dp"
+        android:text="Developed by theesmarty" />
 
 </RelativeLayout>
