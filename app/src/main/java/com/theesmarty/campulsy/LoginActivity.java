@@ -30,9 +30,10 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginButton;
     private GoogleSignInClient googleSignInClient;
     private FirebaseAuth firebaseAuth;
-
+    private UserStat userStat;
     private static final int RC_SIGN_IN = 100;
     private String collegeDomain = null;
+    private boolean isOtherSelected = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +41,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         firebaseAuth = FirebaseAuth.getInstance();
+        userStat = new UserStat(this); // Initialize UserStat
 
         collegePicker = findViewById(R.id.pickCollege);
         otherSelectedInfo = findViewById(R.id.otherSelectedInfo);
@@ -52,34 +54,27 @@ public class LoginActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         collegePicker.setAdapter(adapter);
 
-        // Spinner item selection listener
         collegePicker.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 collegeDomain = domains[position];
+                isOtherSelected = colleges[position].equals("Other");
 
                 if (colleges[position].equals("Select Campus")) {
                     otherSelectedInfo.setVisibility(View.GONE);
                     loginButton.setVisibility(View.GONE);
-                } else if (colleges[position].equals("Other")) {
-                    otherSelectedInfo.setVisibility(View.VISIBLE);
-                    otherSelectedInfo.setText("Join your campus waitlist. You'll be notified as soon as your campus is added.");
-                    loginButton.setVisibility(View.VISIBLE);
-                    loginButton.setText("Join Your Campus");
                 } else {
                     otherSelectedInfo.setVisibility(View.VISIBLE);
-                    otherSelectedInfo.setText("Note: Use only college domain mail while proceeding with login.");
                     loginButton.setVisibility(View.VISIBLE);
-                    loginButton.setText("Proceed to Login");
+                    userStat.setOtherCampus(isOtherSelected);
                 }
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) { }
         });
 
-        // Configure Google Sign-In
+        // Google Signin
         GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.webclientid))
                 .requestEmail()
@@ -88,16 +83,7 @@ public class LoginActivity extends AppCompatActivity {
         googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
 
         // Button click functionality
-        loginButton.setOnClickListener(v -> {
-            if ("Other".equals(colleges[collegePicker.getSelectedItemPosition()])) {
-                // If "Other" is selected, go to the Waitlist Activity
-                Intent waitlistIntent = new Intent(LoginActivity.this, WaitlistActivity.class);
-                startActivity(waitlistIntent);
-            } else {
-                // Initiate OAuth login for the selected college
-                signInWithGoogle();
-            }
-        });
+        loginButton.setOnClickListener(v -> signInWithGoogle());
     }
 
     private void signInWithGoogle() {
@@ -114,7 +100,7 @@ public class LoginActivity extends AppCompatActivity {
             if (task.isSuccessful()) {
                 GoogleSignInAccount account = task.getResult();
                 if (account != null) {
-                    validateAndAuthenticate(account);
+                    handleSignInResult(account);
                 }
             } else {
                 Toast.makeText(this, "Google sign-in failed.", Toast.LENGTH_SHORT).show();
@@ -122,28 +108,34 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void validateAndAuthenticate(GoogleSignInAccount account) {
-        String userEmail = account.getEmail();
-
-        // Check if the email domain matches the selected college domain
-        if (userEmail != null && userEmail.endsWith("@" + collegeDomain)) {
-            AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
-            firebaseAuth.signInWithCredential(credential).addOnCompleteListener(this, task -> {
-                if (task.isSuccessful()) {
-                    FirebaseUser user = firebaseAuth.getCurrentUser();
-                    if (user != null) {
-                        Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
-                        startActivity(mainIntent);
-                        finish();
-                    }
-                } else {
-                    Toast.makeText(this, "Authentication failed.", Toast.LENGTH_SHORT).show();
-                }
-            });
+    private void handleSignInResult(GoogleSignInAccount account) {
+        // Skip domain validation if "Other" is selected, redirect to WaitlistActivity
+        if (isOtherSelected) {
+            Intent waitlistIntent = new Intent(LoginActivity.this, WaitlistActivity.class);
+            startActivity(waitlistIntent);
+            finish();
         } else {
-            Toast.makeText(this, "Please use your college domain email to login.", Toast.LENGTH_LONG).show();
-            FirebaseAuth.getInstance().signOut();
-            googleSignInClient.signOut().addOnCompleteListener(task1 -> {});
+            // Check the email domain if "Other" is not selected
+            String userEmail = account.getEmail();
+            if (userEmail != null && userEmail.endsWith("@" + collegeDomain)) {
+                AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+                firebaseAuth.signInWithCredential(credential).addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = firebaseAuth.getCurrentUser();
+                        if (user != null) {
+                            Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
+                            startActivity(mainIntent);
+                            finish();
+                        }
+                    } else {
+                        Toast.makeText(this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                Toast.makeText(this, "Please use your college domain email to login.", Toast.LENGTH_LONG).show();
+                FirebaseAuth.getInstance().signOut();
+                googleSignInClient.signOut().addOnCompleteListener(task1 -> {});
+            }
         }
     }
 }

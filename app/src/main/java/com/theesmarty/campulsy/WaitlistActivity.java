@@ -1,8 +1,10 @@
 package com.theesmarty.campulsy;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class WaitlistActivity extends AppCompatActivity {
 
@@ -10,16 +12,19 @@ public class WaitlistActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_waitlist);
-        // TODO: 11/3/24 Create a form for new Campus
 
-        // TODO: 11/3/24 if userStat value is 1 then allow user to fill the form
+        Button inviteButton = findViewById(R.id.inviteButton);
 
-        // TODO: 11/3/24 if userStat value is 2 then Show the user waitlist info and invitation link
+        inviteButton.setOnClickListener(v -> {
+            String dynamicLink = "https://theesmarty.in/";
 
-        // TODO: 11/5/24 if user fills all he details and click submit, show him alert box with info to join waitlist
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_TEXT, "Join me on Campulsy!\n" + dynamicLink);
+            sendIntent.putExtra(Intent.EXTRA_SUBJECT, "Join Campulsy!");
+            sendIntent.setType("text/plain");
 
-        // TODO: 11/3/24 if user submits the  form make the shared preferences userStat value as 2
-
-        // TODO: 11/5/24  Generate a link to invite friends for quick adding of campus
+            startActivity(Intent.createChooser(sendIntent, "Send to"));
+        });
     }
 }

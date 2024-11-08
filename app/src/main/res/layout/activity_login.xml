@@ -64,7 +64,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/black"
-        android:text="Information"
+        android:text="Note: Use only college domain mail while proceeding with login."
         android:gravity="center"
         android:paddingBottom="75dp"
         android:layout_above="@id/loginButton"/>

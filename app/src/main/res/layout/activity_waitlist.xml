@@ -17,94 +17,16 @@
         android:id="@+id/title"
         android:textSize="20sp" />
 
-    <LinearLayout
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="10sp"
-        android:layout_below="@+id/title">
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:hint="Name"
-            app:boxBackgroundMode="outline"
-            app:boxStrokeColor="@color/black"
-            app:boxStrokeWidth="2dp"
-            app:hintTextColor="@color/black">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/userName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:textColor="@color/black"
-                android:textDirection="ltr" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:hint="ID: 21XX1XXX01"
-            app:boxBackgroundMode="outline"
-            app:boxStrokeColor="@color/black"
-            app:boxStrokeWidth="2dp"
-            app:hintTextColor="@color/black">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/collegeId"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:textColor="@color/black"
-                android:textDirection="ltr" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:hint="College Name"
-            app:boxBackgroundMode="outline"
-            app:boxStrokeColor="@color/black"
-            app:boxStrokeWidth="2dp"
-            app:hintTextColor="@color/black">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/collegeName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:textColor="@color/black"
-                android:textDirection="ltr" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:hint="College Mail"
-            app:boxBackgroundMode="outline"
-            app:boxStrokeColor="@color/black"
-            app:boxStrokeWidth="2dp"
-            app:hintTextColor="@color/black">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/collegeMail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:textColor="@color/black"
-                android:textDirection="ltr" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-    </LinearLayout>
-
+        android:gravity="center"
+        android:textSize="18sp"
+        android:text="Your campus is currently not added to Campulsy.\n You're Currently in your campus waitlist.\n You'll be notified as soon as your campus is added. Invite by sharing a link with friends at your school. The more requests we get for this campus, the sooner it'll be added!"
+        android:layout_centerInParent="true"/>
     <Button
         style="?attr/materialButtonOutlinedStyle"
-        android:id="@+id/reqButton"
+        android:id="@+id/inviteButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="#1976d2"
@@ -113,6 +35,6 @@
         app:elevation="5dp"
         app:cornerRadius="10dp"
         android:layout_alignParentBottom="true"
-        android:text="Submit"/>
+        android:text="Invite friends"/>
 
 </RelativeLayout>
