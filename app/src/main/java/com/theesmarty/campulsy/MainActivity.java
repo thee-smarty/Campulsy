@@ -20,16 +20,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         so=findViewById(R.id.signout);
-        so.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FirebaseAuth.getInstance().signOut();
-                new Handler().postDelayed(() -> {
-                    Intent in = new Intent(MainActivity.this, SplashActivity.class);
-                    startActivity(in);
-                    finish();
-                }, 2000);
-            }
+        so.setOnClickListener(view -> {
+            FirebaseAuth.getInstance().signOut();
+            new Handler().postDelayed(() -> {
+                Intent in = new Intent(MainActivity.this, SplashActivity.class);
+                startActivity(in);
+                finish();
+            }, 2000);
         });
     }
 }
